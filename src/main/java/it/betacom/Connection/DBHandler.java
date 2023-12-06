@@ -54,7 +54,7 @@ public class DBHandler {
 		try {
 			con = DriverManager.getConnection(url,user,pass);
 			logger.info("Connessione riuscita");
-		} catch (SQLException e) {e.printStackTrace();
+		} catch (SQLException e) {logger.error("Connessione non riuscita");
 		}
 	}
 	
@@ -73,9 +73,9 @@ public class DBHandler {
 			this.csv_path = properties.getProperty("csv_path");
 			this.pdf_path = properties.getProperty("pdf_path")+LocalDate.now()+".pdf";
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("File non trovato");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Errore nel load");
 		}
 	}
 
@@ -111,7 +111,7 @@ public class DBHandler {
 			logger.info("Creato tabella estrazioni");
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Errore nella creazione tabelle");
 		}
 	}
 	
@@ -135,10 +135,10 @@ public class DBHandler {
 					+ rs.getString("sede")+"',"
 					+ "NOW());";
 			stm.executeUpdate(insert);
-			logger.info("Inserito estrazione");
+//			logger.info("Inserito estrazione");
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("Errore estrazione");
 		}
 
 	}
@@ -156,8 +156,8 @@ public class DBHandler {
 								+ "');";
 				stm = con.createStatement();
 				stm.executeUpdate(sql);
-				logger.info("Inserito partecipanti");
 			}
+			logger.info("Inserito partecipanti");
 			
 		} catch (FileNotFoundException e) {e.printStackTrace();
 		} catch (SQLException e) {e.printStackTrace();}  
@@ -181,7 +181,7 @@ public class DBHandler {
 			
 			while(rs.next()) {
 //				System.out.println(rs.getString("nome")+ " - " + rs.getString("Counter"));
-				String result = rs.getString("Counter") + " - " + rs.getString("nome");
+				String result = rs.getString("Counter") + " - " + rs.getString("nome") + " - " + rs.getString("sede");
 				Paragraph paragrafo = new Paragraph();
 				paragrafo.setFont(font);
 				paragrafo.add(result);
@@ -203,7 +203,7 @@ public class DBHandler {
 		Statement stm = null;
 		
 		String drop_partecipanti = "DROP TABLE IF EXISTS partecipanti";
-		String drop_estrazione = "DROP TABLE IF EXISTS estrazioni";
+		String drop_estrazione = "DROP TABLE IF EXISTS estrazioni";		
 
 		try {
 			stm = con.createStatement();
@@ -214,5 +214,12 @@ public class DBHandler {
 		} catch (SQLException e) {e.printStackTrace();}
 	}
 	
+	public void close() {
+		if (con!=null)
+			try {con.close();
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+	}
 
 }

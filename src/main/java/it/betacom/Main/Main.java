@@ -7,15 +7,15 @@ import it.betacom.Connection.DBHandler;
 public class Main {
 
 	public static void main(String[] args) {
-//		app();
-		DBHandler c = DBHandler.getInstance();
-		c.reset();
-		c.init();
-		c.readCSV();
-		for (int i=0; i<80; i++) {
-			c.estrazione();
-		}
-		c.printPDF();
+		app();
+//		DBHandler c = DBHandler.getInstance();
+//		c.reset();
+//		c.init();
+//		c.readCSV();
+//		for (int i=0; i<80; i++) {
+//			c.estrazione();
+//		}
+//		c.printPDF();
 	}
 	
 	
@@ -56,6 +56,7 @@ public class Main {
 			c.reset();
 			break;		
 		case 5:
+			c.close();
 			return;
 		}
 	}
